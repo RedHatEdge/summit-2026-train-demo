@@ -8,16 +8,14 @@ from pymodbus.pdu import ExceptionResponse
 from prometheus_client import CollectorRegistry, Gauge, push_to_gateway
 
 # --- Configuration ---
-MQTT_BROKER = os.getenv("MQTT_BROKER", "localhost")
+MQTT_BROKER = os.getenv("MQTT_BROKER", "192.168.100.30")
 MQTT_PORT = int(os.getenv("MQTT_PORT", 1883))
-MQTT_TOPIC = os.getenv("MQTT_TOPIC", "motor/control")
+MQTT_TOPIC = os.getenv("MQTT_TOPIC", "train/cmd")
 PUSHGATEWAY_URL = os.getenv("PUSHGATEWAY_URL", "http://localhost:9091")
 
-# Voltage Control Parameters (Capped at 10V)
+# Voltage Control Parameters
 MAX_VOLTAGE = 10.0
 MIN_VOLTAGE = 0.0
-START_VOLTAGE = 5.0
-STEP_VOLTAGE = 1.0
 
 # Modbus Registers
 SPEED_REG = 0x6000 # AO0
@@ -25,7 +23,7 @@ DIR_REG = 0x6001   # AO1
 
 # --- Global State ---
 current_voltage = 0.0
-current_direction = "forward" # 'forward' or 'reverse'
+current_direction = "forward"
 
 # --- Prometheus Setup ---
 registry = CollectorRegistry()
@@ -47,7 +45,6 @@ modbus_client = ModbusSerialClient(
 )
 
 def write_modbus_ao(register, volts, label):
-    # CHANGED: 32767 is the correct signed 16-bit max for the IONA
     val = int((volts / 10.3) * 32767) 
     unit_id = 188
 
@@ -98,32 +95,22 @@ def on_message(client, userdata, msg):
 
     state_changed = False
 
-    if command == "stop":
-        if current_voltage != MIN_VOLTAGE:
-            current_voltage = MIN_VOLTAGE
+    if command == "start":
+        if current_voltage != 10.0:
+            current_voltage = 10.0
             state_changed = True
-    elif command == "start":
-        if current_voltage == MIN_VOLTAGE:
-            current_voltage = START_VOLTAGE
+    elif command == "stop":
+        if current_voltage != 0.0:
+            current_voltage = 0.0
             state_changed = True
-    elif command == "faster":
-        new_v = min(MAX_VOLTAGE, current_voltage + STEP_VOLTAGE)
-        if new_v != current_voltage:
-            current_voltage = new_v
+    elif command == "slow":
+        if current_voltage != 4.0:
+            current_voltage = 4.0
             state_changed = True
-    elif command == "slower":
-        new_v = max(MIN_VOLTAGE, current_voltage - STEP_VOLTAGE)
-        if new_v != current_voltage:
-            current_voltage = new_v
-            state_changed = True
-    elif command == "forward":
-        if current_direction != "forward":
-            current_direction = "forward"
-            state_changed = True
-    elif command in ["reverse", "backward"]: 
-        if current_direction != "reverse":
-            current_direction = "reverse"
-            state_changed = True
+    elif command == "reverse":
+        # Flip the current direction
+        current_direction = "reverse" if current_direction == "forward" else "forward"
+        state_changed = True
     else:
         print(f"Ignored unknown command: {command}")
         return
@@ -137,6 +124,7 @@ def main():
     global current_voltage, current_direction 
     
     print("Starting Motor Service...")
+    # Initialize at 0V and Forward
     update_motor_state()
 
     try:
