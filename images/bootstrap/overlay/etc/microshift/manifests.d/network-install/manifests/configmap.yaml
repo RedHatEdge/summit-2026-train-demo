@@ -1415,7 +1415,7 @@ data:
                       - name: global.storageClassName
                         value: px-csi-replicated
                       - name: global.auth.insecureSkipTlsVerify
-                        value: true
+                        value: 'true'
               EOF
 
               echo "Applying RHEM manifest..."
