@@ -17,3 +17,5 @@ data:
     dhcp-boot=shimx64.efi,external-tftp,192.168.100.1
     dhcp-option=66,192.168.100.1
     dhcp-option=67,shimx64.efi
+    dhcp-host=00:00:01:04:0c:e1,192.168.100.200,infinite
+    dhcp-host=00:c0:08:aa:07:0e,192.168.100.250,infinite
