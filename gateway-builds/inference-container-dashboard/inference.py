@@ -219,7 +219,7 @@ OCP_PROMETHEUS_URL = os.environ.get("OCP_PROMETHEUS_URL", "").rstrip("/")
 OCP_TOKEN          = os.environ.get("OCP_TOKEN", "")
 OCP_TLS_VERIFY     = _bool("OCP_TLS_VERIFY", False)
 OCP_NODE_NAMES     = [n.strip() for n in os.environ.get(
-    "OCP_NODE_NAMES", "node0,node1,arbiter").split(",") if n.strip()]
+    "OCP_NODE_NAMES", "").split(",") if n.strip()]  # empty = auto-discover
 OCP_QUERY_TIMEOUT  = float(os.environ.get("OCP_QUERY_TIMEOUT", "2.0"))
 
 _ocp_cache_lock = threading.Lock()
@@ -447,9 +447,18 @@ def fetch_ocp_metrics():
                 if n and r:
                     role_map.setdefault(n, []).append(r)
 
+        # Auto-discover node names from the metrics themselves when the
+        # OCP_NODE_NAMES env var is empty / set to "auto". This makes the
+        # same container image work on any OCP cluster without per-cluster
+        # config.
+        node_names = OCP_NODE_NAMES
+        if not node_names or node_names == ["auto"]:
+            discovered = sorted(set(cpu.keys()) | set(mem.keys()) | set(info_map.keys()))
+            node_names = [n for n in discovered if n]
+
         nodes = []
         total_disk = used_disk = 0.0
-        for name in OCP_NODE_NAMES:
+        for name in node_names:
             info  = info_map.get(name, {})
             roles = role_map.get(name, [])
             # prefer the more specific role (master/arbiter > control-plane > worker)
@@ -837,19 +846,13 @@ def inference_loop():
             if MQTT_ENABLED:
                 try:
                     import paho.mqtt.publish as mqtt_publish
-                    payload = json.dumps({
-                        "cmd":        trigger_label,
-                        "confidence": round(float(conf1), 4),
-                        "device":     DEVICE_ID,
-                        "model":      MODEL_VERSION,
-                    })
                     mqtt_publish.single(
                         MQTT_TOPIC,
-                        payload=payload,
+                        payload=trigger_label,
                         hostname=MQTT_BROKER,
                         port=MQTT_PORT,
                     )
-                    print(f"  MQTT → {MQTT_BROKER}:{MQTT_PORT} {MQTT_TOPIC} {payload}", flush=True)
+                    print(f"  MQTT → {MQTT_BROKER}:{MQTT_PORT} {MQTT_TOPIC} {trigger_label}", flush=True)
                 except Exception as mqtt_err:
                     print(f"  MQTT ERROR: {mqtt_err}", flush=True)
 
