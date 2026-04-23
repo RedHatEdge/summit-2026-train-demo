@@ -72,6 +72,8 @@ MQTT_ENABLED  = _bool("MQTT_ENABLED", False)
 MQTT_BROKER   = os.environ.get("MQTT_BROKER",  "localhost")
 MQTT_PORT     = int(os.environ.get("MQTT_PORT", "1883"))
 MQTT_TOPIC    = os.environ.get("MQTT_TOPIC",   "train/cmd")
+DEVICE_ID     = os.environ.get("DEVICE_ID",    "ms01-camera")
+MODEL_VERSION = os.environ.get("MODEL_VERSION", "placards-v1")
 
 # ---------------------------------------------------------------------------
 # Shared frame buffer — inference loop writes, Flask thread reads
@@ -343,13 +345,19 @@ def inference_loop():
             if MQTT_ENABLED:
                 try:
                     import paho.mqtt.publish as mqtt_publish
+                    payload = json.dumps({
+                        "cmd":        trigger_label,
+                        "confidence": round(float(conf1), 4),
+                        "device":     DEVICE_ID,
+                        "model":      MODEL_VERSION,
+                    })
                     mqtt_publish.single(
                         MQTT_TOPIC,
-                        payload=trigger_label,
+                        payload=payload,
                         hostname=MQTT_BROKER,
                         port=MQTT_PORT,
                     )
-                    print(f"  MQTT → {MQTT_BROKER}:{MQTT_PORT} {MQTT_TOPIC} {trigger_label}", flush=True)
+                    print(f"  MQTT → {MQTT_BROKER}:{MQTT_PORT} {MQTT_TOPIC} {payload}", flush=True)
                 except Exception as mqtt_err:
                     print(f"  MQTT ERROR: {mqtt_err}", flush=True)
 
