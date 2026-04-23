@@ -1,5 +1,14 @@
 FROM registry.redhat.io/rhel9/rhel-bootc:9.7
 
+# Args for RHSM
+ARG RHSM_ORG
+ARG RHSM_AK
+
+# Provide access to RHSM content
+RUN subscription-manager register \
+    --org "${RHSM_ORG}" \
+    --activationkey "${RHSM_AK}"
+
 RUN dnf install -y \
     @base-x \
     @gnome-desktop \
@@ -32,7 +41,8 @@ RUN dnf remove -y subscription-manager-plugin-gnome || true && \
 # Install Edge Manager agent
 RUN dnf config-manager --add-repo https://rpm.flightctl.io/flightctl-epel.repo && \
     dnf clean all && \
-    dnf -y install flightctl-agent-0:1.1.0~rc5-1.el9.x86_64 && \
+    #dnf -y install flightctl-agent-0:1.1.0~rc5-1.el9.x86_64 && \
+    dnf -y install flightctl-agent-1.1.1-1.el9.x86_64 && \
     systemctl enable flightctl-agent.service
 
 # Copy early binding enrollment config
