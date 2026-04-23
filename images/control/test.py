@@ -6,11 +6,11 @@ import paho.mqtt.publish as publish
 
 def main():
     parser = argparse.ArgumentParser(description="Send commands to the MQTT motor controller.")
-    
+
     # Strictly enforce the allowed relative commands
     parser.add_argument(
-        "command", 
-        choices=["start", "stop", "faster", "slower", "forward", "reverse"], 
+        "command",
+        choices=["start", "stop", "slow", "reverse"],
         help="The command to send to the motor."
     )
     
