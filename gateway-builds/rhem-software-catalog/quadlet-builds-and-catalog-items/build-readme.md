@@ -10,9 +10,9 @@ It calls the scratch containers that are published at quay.io/kenosborn/ai-infer
 
 during catalog deployment).  The scratch container, in turn, pulls the inference-train-demo app that is wired to each version.
 
-## 1. Create `Container-{version}` (quadlet definition) Files
+## 1. Create 'inference-{version}.container (quadlet definition) Files
 
-### v1
+### inference-v1.container
 
 ``` ini
 [Unit]
@@ -43,7 +43,7 @@ User=root
 WantedBy=default.target
 ```
 
-### v2
+### inference-v1.container
 
 ``` ini
 [Unit]
@@ -76,14 +76,14 @@ WantedBy=default.target
 
 ## 2. Create and Publish Scratch Containers
 
-### Containerfile (v1)
+### Containerfile-v1
 
 ``` dockerfile
 FROM scratch
 COPY inference-v1.container /inference.container
 ```
 
-### Containerfile (v2)
+### Containerfile-v2
 
 ``` dockerfile
 FROM scratch
