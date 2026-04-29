@@ -99,7 +99,7 @@ podman push quay.io/kenosborn/ai-inference-app:v1
 podman push quay.io/kenosborn/ai-inference-app:v2
 ```
 
-## 4. Create Catalog (`edge-ai-apps-catalog.yaml`)
+## 3. Create Catalog (`edge-ai-apps-catalog.yaml`)
 
 ``` yaml
 apiVersion: flightctl.io/v1alpha1
