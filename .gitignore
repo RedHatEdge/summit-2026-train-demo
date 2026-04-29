@@ -15,4 +15,4 @@ iona/
 copyme
 *.tgz
 pull-secret.json
-.venv
+.venv.DS_Store
