@@ -1,0 +1,7 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: system-dashboard
+  labels:
+    app.kubernetes.io/part-of: system-dashboard

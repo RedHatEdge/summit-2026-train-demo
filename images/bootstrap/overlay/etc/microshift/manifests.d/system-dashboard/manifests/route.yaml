@@ -1,0 +1,52 @@
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: blackbox-exporter
+  labels:
+    app.kubernetes.io/component: blackbox-exporter
+    app.kubernetes.io/part-of: system-dashboard
+spec:
+  to:
+    kind: Service
+    name: blackbox-exporter
+  port:
+    targetPort: 9115
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: prometheus
+  labels:
+    app.kubernetes.io/component: prometheus
+    app.kubernetes.io/part-of: system-dashboard
+spec:
+  host: 
+  to:
+    kind: Service
+    name: prometheus
+  port:
+    targetPort: 9090
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: grafana
+  labels:
+    app.kubernetes.io/component: grafana
+    app.kubernetes.io/part-of: system-dashboard
+spec:
+  to:
+    kind: Service
+    name: grafana
+  port:
+    targetPort: 3000
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect

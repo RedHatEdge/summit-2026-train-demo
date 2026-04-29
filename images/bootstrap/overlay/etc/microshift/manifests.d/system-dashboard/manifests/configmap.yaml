@@ -1,0 +1,145 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: blackbox-config
+  labels:
+    app.kubernetes.io/component: blackbox-exporter
+    app.kubernetes.io/part-of: system-dashboard
+data:
+  config.yml: |
+    modules:
+      http:
+        prober: http
+        http:
+          tls_config:
+            insecure_skip_verify: true
+      ssh:
+        prober: tcp
+        tcp:
+          query_response:
+          - expect: "^SSH-2.0-"
+          - send: "SSH-2.0-blackbox-ssh-check"
+      icmp:
+        prober: icmp
+        timeout: 5s
+        icmp:
+          ttl: 5
+          preferred_ip_protocol: ip4
+      tcp:
+        prober: tcp
+        timeout: 5s
+        tcp:
+          query_response: []
+          tls: false
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+  labels:
+    app.kubernetes.io/component: prometheus
+    app.kubernetes.io/part-of: system-dashboard
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 10s
+    scrape_configs:
+      - job_name: 'prometheus'
+        scrape_interval: 10s
+        static_configs:
+          - targets: ['prometheus:9090']
+      - job_name: 'blackbox_exporter'
+        static_configs:
+          - targets: ['blackbox-exporter:9115']
+      - job_name: 'ping'
+        metrics_path: /probe
+        params:
+          module: [icmp]
+        static_configs:
+          - targets:
+            - bootstrap.BASE_DNS_ZONE
+            - api.acp.BASE_DNS_ZONE
+            - node0.BASE_DNS_ZONE
+            - node1.BASE_DNS_ZONE
+            - arbiter.BASE_DNS_ZONE
+            - node0-rc.BASE_DNS_ZONE
+            - node1-rc.BASE_DNS_ZONE
+            - edge-gateway-rc.BASE_DNS_ZONE
+            - arbiter-rc.BASE_DNS_ZONE
+            - edge-gateway.BASE_DNS_ZONE
+            - iona.BASE_DNS_ZONE
+        relabel_configs:
+          - source_labels: [__address__]
+            target_label: __param_target
+          - source_labels: [__param_target]
+            target_label: instance
+          - target_label: __address__
+            replacement: blackbox-exporter:9115
+      - job_name: 'http_endpoints'
+        metrics_path: /probe
+        scrape_interval: 10s
+        params:
+          module: [http]
+        static_configs:
+          - targets:
+            - api.acp.BASE_DNS_ZONE
+            - console-openshift-console.apps.acp.BASE_DNS_ZONE
+            - ui.rhem.rhem.apps.acp.BASE_DNS_ZONE
+            - api.rhem.rhem.apps.acp.BASE_DNS_ZONE
+            - openshift-gitops-server-openshift-gitops.apps.acp.BASE_DNS_ZONE
+            - api.bootstrap.BASE_DNS_ZONE
+            - registry-registry.apps.bootstrap.BASE_DNS_ZONE
+            - pubsrv-network-install.apps.bootstrap.BASE_DNS_ZONE
+            - resources-network-install.apps.bootstrap.BASE_DNS_ZONE
+        relabel_configs:
+          - source_labels: [__address__]
+            target_label: __param_target
+          - source_labels: [__param_target]
+            target_label: instance
+          - target_label: __address__
+            replacement: blackbox-exporter:9115
+      - job_name: 'tcp_ports'
+        metrics_path: /probe
+        scrape_interval: 10s
+        params:
+          module: [tcp]
+        static_configs:
+          - targets:
+            - mqtt.BASE_DNS_ZONE:1883
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-config
+  labels:
+    app.kubernetes.io/component: grafana
+    app.kubernetes.io/part-of: system-dashboard
+data:
+  GF_SECURITY_ADMIN_USER: ansible
+  GF_SECURITY_ADMIN_PASSWORD: 'R3dh4t123!'
+  GF_DEFAULT_THEME: light
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: datasource-config
+  labels:
+    app.kubernetes.io/component: grafana
+    app.kubernetes.io/part-of: system-dashboard
+data:
+  prometheus.yml: |
+    ---
+    apiVersion: 1
+    deleteDatasources:
+      - name: Prometheus
+        orgId: 1
+    datasources:
+    - name: Prometheus
+      type: prometheus
+      access: proxy
+      orgId: 1
+      url: http://prometheus:9090
+      isDefault: true
+      version: 1
+      editable: true

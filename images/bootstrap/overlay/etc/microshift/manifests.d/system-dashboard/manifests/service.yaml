@@ -1,0 +1,45 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: blackbox-exporter
+  labels:
+    app.kubernetes.io/component: blackbox-exporter
+    app.kubernetes.io/part-of: system-dashboard
+spec:
+  ports:
+  - port: 9115
+    targetPort: 9115
+    protocol: TCP
+  selector:
+    app.kubernetes.io/name: blackbox-exporter
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus
+  labels:
+    app.kubernetes.io/component: prometheus
+    app.kubernetes.io/part-of: system-dashboard
+spec:
+  selector:
+    app.kubernetes.io/name: prometheus
+  ports:
+    - protocol: TCP
+      port: 9090
+      targetPort: 9090
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana
+  labels:
+    app.kubernetes.io/component: grafana
+    app.kubernetes.io/part-of: system-dashboard
+spec:
+  selector:
+    app.kubernetes.io/name: grafana
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000

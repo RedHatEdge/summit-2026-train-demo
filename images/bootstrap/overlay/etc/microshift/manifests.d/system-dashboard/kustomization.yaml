@@ -1,0 +1,14 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: system-dashboard
+resources:
+  - manifests/namespace.yaml
+  - manifests/clusterrole.yaml
+  - manifests/configmap.yaml
+  - manifests/deployment.yaml
+  - manifests/persistentvolumeclaim.yaml
+  - manifests/rolebinding.yaml
+  - manifests/route.yaml
+  - manifests/service.yaml
+  - manifests/serviceaccount.yaml
