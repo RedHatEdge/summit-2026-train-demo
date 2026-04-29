@@ -177,3 +177,4 @@ flightctl apply -f edge-ai-apps-catalog.yaml
 flightctl apply -f inference-app.yaml
 ```
 
+## 6. Apply the 'dummy' Catalog and Catalog Items
