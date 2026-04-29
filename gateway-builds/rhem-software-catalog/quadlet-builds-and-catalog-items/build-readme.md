@@ -93,8 +93,8 @@ COPY inference-v2.container /inference.container
 ### Build Commands
 
 ``` bash
-podman build --no-cache -t quay.io/kenosborn/ai-inference-app:v1 Containerfile-v1
-podman build --no-cache -t quay.io/kenosborn-ai-inference-app:v2 Containerfile-v2
+podman build --no-cache -t quay.io/kenosborn/ai-inference-app:v1 -f Containerfile-v1
+podman build --no-cache -t quay.io/kenosborn-ai-inference-app:v2 -f Containerfile-v2
 ```
 
 ## 3. Create Catalog Item (`app-inference.yaml`)
