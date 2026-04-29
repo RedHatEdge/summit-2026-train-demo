@@ -10,7 +10,7 @@ It calls the scratch containers that are published at quay.io/kenosborn/ai-infer
 
 during catalog deployment).  The scratch container, in turn, pulls the inference-train-demo app that is wired to each version.
 
-## 1. Create `inference-v#.container` Files
+## 1. Create `inference-{version}.container` Files
 
 ### v1
 
