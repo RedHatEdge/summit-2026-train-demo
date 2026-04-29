@@ -51,6 +51,13 @@ data:
     node0 IN A 192.168.100.20
     node1 IN A 192.168.100.21
     arbiter IN A 192.168.100.22
+    edge-gateway IN A 192.168.100.200
+    iona IN A 192.168.100.250
+    mqtt IN A 192.168.100.30
+    node0-rc IN A 192.168.101.10
+    node1-rc IN A 192.168.101.11
+    edge-gateway-rc IN A 192.168.101.12
+    arbiter-rc IN A 192.168.101.13
 
   reverse.zone: |
     $TTL    86400
