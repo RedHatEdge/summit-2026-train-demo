@@ -178,3 +178,7 @@ flightctl apply -f inference-app.yaml
 ```
 
 ## 6. Apply the 'dummy' Catalog and Catalog Items
+
+``` bash
+dummy-items/ import-dummy-items.sh
+```
