@@ -164,8 +164,8 @@ spec:
         MARGIN_MIN: "0.50"
         STABLE_FRAMES: "6"
         COOLDOWN_SEC: "3.0"
-        MQTT_ENABLED: "false"
-        MQTT_BROKER: "10.20.0.150"
+        MQTT_ENABLED: "true"
+        MQTT_BROKER: "192.168.100.30"
         MQTT_PORT: "1883"
         MQTT_TOPIC: "train/cmd"
 ```
