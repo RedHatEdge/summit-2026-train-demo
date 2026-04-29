@@ -1,0 +1,2 @@
+FROM scratch
+COPY inference-v2.container /inference.container

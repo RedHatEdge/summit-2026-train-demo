@@ -1,0 +1,6 @@
+apiVersion: flightctl.io/v1alpha1
+kind: Catalog
+metadata:
+  name: edge-ai-apps
+spec:
+  displayName: Edge AI Apps
