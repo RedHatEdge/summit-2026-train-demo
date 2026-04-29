@@ -1,7 +1,7 @@
 #!/bin/bash
 
 IMAGE_NAME=quay.io/kenosborn/inference-train-demo
-IMAGE_TAG=v3
+IMAGE_TAG=v1
 
 podman build --no-cache -t "${IMAGE_NAME}:${IMAGE_TAG}" .
 
