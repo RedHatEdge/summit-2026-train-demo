@@ -43,7 +43,7 @@ User=root
 WantedBy=default.target
 ```
 
-### inference-v1.container
+### inference-v2.container
 
 ``` ini
 [Unit]
