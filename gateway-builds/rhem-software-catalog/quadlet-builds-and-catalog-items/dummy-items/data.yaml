@@ -1,0 +1,23 @@
+apiVersion: flightctl.io/v1alpha1
+kind: CatalogItem
+metadata:
+  name: aimodel
+  catalog: edge-apps
+spec:
+  type: data
+  category: application
+  artifacts:
+  - type: container
+    uri: quay.io/foo/asset
+  displayName: AI model
+  provider: Red Hat
+  documentationUrl: 'https://docs.redhat.com/en'
+  homepage: 'https://redhat.com'
+  icon: >-
+    data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgZmlsbD0iIzAwMDAwMCI+PHBhdGggZmlsbD0iIzAwMDAwMCIgZD0iTTM0MS41MiAyODUuNTZjMzMuNjUgMCA4Mi4zNC02Ljk0IDgyLjM0LTQ3Yy4yMi02Ljc0Ljg2LTEuODItMjAuODgtOTYuMjRjLTQuNjItMTkuMTUtOC42OC0yNy44NC00Mi4zMS00NC42NWMtMjYuMDktMTMuMzQtODIuOTItMzUuMzctOTkuNzMtMzUuMzdjLTE1LjY2IDAtMjAuMiAyMC4xNy0zOC44NyAyMC4xN2MtMTggMC0zMS4zMS0xNS4wNi00OC4xMi0xNS4wNmMtMTYuMTQgMC0yNi42NiAxMS0zNC43OCAzMy42MmMtMjcuNSA3Ny41NS0yNi4yOCA3NC4yNy0yNi4xMiA3OC4yN2MwIDI0LjggOTcuNjQgMTA2LjExIDIyOC40NyAxMDYuMTFNNDI5IDI1NC44NGM0LjY1IDIyIDQuNjUgMjQuMzUgNC42NSAyNy4yNWMwIDM3LjY2LTQyLjMzIDU4LjU2LTk4IDU4LjU2Yy0xMjUuNzQuMDgtMjM1LjkxLTczLjY1LTIzNS45MS0xMjIuMzNhNDkuNTUgNDkuNTUgMCAwIDEgNC4wNi0xOS43MkM1OC41NiAyMDAuODYgMCAyMDguOTMgMCAyNjAuNjNjMCA4NC42NyAyMDAuNjMgMTg5IDM1OS40OSAxODljMTIxLjc5IDAgMTUyLjUxLTU1LjA4IDE1Mi41MS05OC41OGMwLTM0LjIxLTI5LjU5LTczLjA1LTgyLjkzLTk2LjI0Ii8+PC9zdmc+
+  versions:
+    - version: 0.1.0
+      references:
+        container: "0.1.0"
+      channels:
+        - dev

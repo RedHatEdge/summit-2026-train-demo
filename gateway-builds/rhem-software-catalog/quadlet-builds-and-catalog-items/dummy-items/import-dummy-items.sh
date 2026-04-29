@@ -7,4 +7,4 @@ flightctl apply -f catalog.yaml
 flightctl apply -f app.yaml
 flightctl apply -f os.yaml
 flightctl apply -f edge.yaml
-
+flightctl apply -f data.yaml
