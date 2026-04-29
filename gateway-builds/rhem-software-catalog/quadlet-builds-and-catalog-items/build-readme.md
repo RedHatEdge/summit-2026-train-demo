@@ -1,5 +1,12 @@
 # Edge AI Inference App -- Software Catalog Setup
 
+"quay.io/kenosborn/inference-train-demo:v1" is my inference app prior to stephen dashboard
+"quay.io/kenosborn/inference-train-demo:v2" is stephen dashboard
+
+The RHEM catalog item that gets created "Inference (Edge AI Train Control)" has options to deploy v1 or v2.  
+It calls the scratch containers that are published at quay.io/kenosborn/ai-inference-app:v#" (replacing v# with whatever the user selects
+during catalog deployment).  The scratch container, in turn, pulls the inference-train-demo app that is wired to each version.
+
 ## 1. Create `inference-v#.container` Files
 
 ### v1
