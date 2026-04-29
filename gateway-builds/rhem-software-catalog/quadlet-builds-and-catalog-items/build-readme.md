@@ -110,7 +110,7 @@ spec:
   displayName: Edge AI Apps
 ```
 
-## 4. Create Catalog Item (`app-inference.yaml`)
+## 4. Create Catalog Item (`inference-app.yaml`)
 
 ``` yaml
 apiVersion: flightctl.io/v1alpha1
