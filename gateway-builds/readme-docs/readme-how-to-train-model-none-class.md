@@ -186,3 +186,7 @@ git commit -m "Restore placards.onnx to initial version"
 git push
 ```
 
+There is also a pre-conference backup of the model here
+```
+gateway-builds/inference-container/models-pre-conference-backup
+```
