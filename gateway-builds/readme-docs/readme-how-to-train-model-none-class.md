@@ -157,11 +157,32 @@ Copy the new model files into the build context and rebuild:
 
 ```bash
 cp out/placards.onnx out/labels.json \
-  ~/path/to/inference-web-container/models/
+  /Users/kosborn/Documents/git/summit-2026-train-demo/gateway-builds/inference-container/models
 
-cd ~/path/to/inference-web-container
-./build.sh
+cd /Users/kosborn/Documents/git/summit-2026-train-demo/gateway-builds/inference-container
+./build_inference_stephen-dashboard.sh
 ```
 
-Then update the fleet spec in RHEM with the new image tag and let the agent roll it out to the device.
+Commit the git changes and push
+
+```
+cd /Users/kosborn/Documents/git/summit-2026-train-demo
+git add .
+git commit -m "updating model"
+git push
+```
+
+build_inference_stephen-dashboard.sh will push/overwrite:
+quay.io/kenosborn/inference-train-demo:v2
+
+(^ that is the container and version that is referenced via scratch container:
+quay.io/kenosborn/ai-inference-app:v2 > which is used via the software catalog yaml item, "inference-app.yaml" https://github.com/RedHatEdge/summit-2026-train-demo/blob/main/gateway-builds/rhem-software-catalog/quadlet-builds-and-catalog-items/inference-app.yaml)
+
+To revert to the original model
+```
+cd /Users/kosborn/Documents/git/summit-2026-train-demo
+git checkout ec8c905 -- gateway-builds/inference-container/models/placards.onnx
+git commit -m "Restore placards.onnx to initial version"
+git push
+```
 
