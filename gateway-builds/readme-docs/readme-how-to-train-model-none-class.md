@@ -149,7 +149,7 @@ If anything is wrong with the export this script will throw an exception before 
 
 ---
 
-## Step 10 — Rebuild the Inference Container
+## Step 10 — Rebuild the Inference Container (Ken: HomeLab - skip to Step 11 if at Conference)
 
 > ⚠️ **Note:** At the conference you won't have access to `rhel-util-01.lab.local` for building. You'll need an alternative build method — either a Fedora laptop (native x86_64) or the OCP cluster (OpenShift Builds). Building on the MacBook requires `--platform linux/amd64` via QEMU which is slow.
 
