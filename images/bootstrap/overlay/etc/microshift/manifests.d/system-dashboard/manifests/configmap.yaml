@@ -107,6 +107,13 @@ data:
         static_configs:
           - targets:
             - mqtt.BASE_DNS_ZONE:1883
+        relabel_configs:
+          - source_labels: [__address__]
+            target_label: __param_target
+          - source_labels: [__param_target]
+            target_label: instance
+          - target_label: __address__
+            replacement: blackbox-exporter:9115
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -117,7 +124,7 @@ metadata:
     app.kubernetes.io/part-of: system-dashboard
 data:
   GF_SECURITY_ADMIN_USER: ansible
-  GF_SECURITY_ADMIN_PASSWORD: 'R3dh4t123!'
+  GF_SECURITY_ADMIN_PASSWORD: 'GRAFANA_ADMIN_PASSWORD'
   GF_DEFAULT_THEME: light
 ---
 apiVersion: v1
@@ -143,3 +150,1035 @@ data:
       isDefault: true
       version: 1
       editable: true
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dashboards-config
+  labels:
+    app.kubernetes.io/component: grafana
+    app.kubernetes.io/part-of: system-dashboard
+data:
+  dashboards.yml: |
+    ---
+    apiVersion: 1
+    providers:
+      - name: 'System Dashboard'
+        orgId: 1
+        folder: '/var/lib/grafana/dashboards/'
+        folderUid: ''
+        type: file
+        disableDeletion: false
+        updateIntervalSeconds: 10
+        allowUiUpdates: true
+        options:
+          path: /var/lib/grafana/dashboards
+          foldersFromFilesStructure: true
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dashboards
+  labels:
+    app.kubernetes.io/component: grafana
+    app.kubernetes.io/part-of: system-dashboard
+  data:
+    system-dashboard.json: |
+      {
+        "apiVersion": "dashboard.grafana.app/v2",
+        "kind": "Dashboard",
+        "metadata": {
+          "name": "angcrbh",
+          "namespace": "default",
+          "uid": "af91ecb9-b902-4de2-afd3-ce692da831ce",
+          "resourceVersion": "1777500162728011",
+          "generation": 2,
+          "creationTimestamp": "2026-04-29T20:17:04Z",
+          "labels": {
+            "grafana.app/deprecatedInternalID": "445938675900416"
+          },
+          "annotations": {
+            "grafana.app/createdBy": "user:afkkzxmm3zo5cb",
+            "grafana.app/folder": "",
+            "grafana.app/saved-from-ui": "Grafana v13.0.1 (a100054f21)",
+            "grafana.app/updatedBy": "user:afkkzxmm3zo5cb",
+            "grafana.app/updatedTimestamp": "2026-04-29T22:02:42Z"
+          }
+        },
+        "spec": {
+          "annotations": [
+            {
+              "kind": "AnnotationQuery",
+              "spec": {
+                "query": {
+                  "kind": "DataQuery",
+                  "group": "grafana",
+                  "version": "v0",
+                  "datasource": {
+                    "name": "-- Grafana --"
+                  },
+                  "spec": {}
+                },
+                "enable": true,
+                "hide": true,
+                "iconColor": "rgba(0, 211, 255, 1)",
+                "name": "Annotations & Alerts",
+                "builtIn": true
+              }
+            }
+          ],
+          "cursorSync": "Off",
+          "editable": true,
+          "elements": {
+            "panel-1": {
+              "kind": "Panel",
+              "spec": {
+                "id": 1,
+                "title": "Services Response TImes",
+                "description": "",
+                "links": [],
+                "data": {
+                  "kind": "QueryGroup",
+                  "spec": {
+                    "queries": [
+                      {
+                        "kind": "PanelQuery",
+                        "spec": {
+                          "query": {
+                            "kind": "DataQuery",
+                            "group": "prometheus",
+                            "version": "v0",
+                            "datasource": {
+                              "name": "PBFA97CFB590B2093"
+                            },
+                            "spec": {
+                              "editorMode": "builder",
+                              "expr": "probe_duration_seconds{job=\"http_endpoints\", instance=\"api.acp.summit2026.com\"}",
+                              "legendFormat": "ACP API",
+                              "range": true
+                            }
+                          },
+                          "refId": "A",
+                          "hidden": false
+                        }
+                      },
+                      {
+                        "kind": "PanelQuery",
+                        "spec": {
+                          "query": {
+                            "kind": "DataQuery",
+                            "group": "prometheus",
+                            "version": "v0",
+                            "datasource": {
+                              "name": "PBFA97CFB590B2093"
+                            },
+                            "spec": {
+                              "editorMode": "builder",
+                              "expr": "probe_duration_seconds{job=\"http_endpoints\", instance=\"api.bootstrap.summit2026.com\"}",
+                              "legendFormat": "Bootstrap API",
+                              "range": true
+                            }
+                          },
+                          "refId": "B",
+                          "hidden": false
+                        }
+                      },
+                      {
+                        "kind": "PanelQuery",
+                        "spec": {
+                          "query": {
+                            "kind": "DataQuery",
+                            "group": "prometheus",
+                            "version": "v0",
+                            "datasource": {
+                              "name": "PBFA97CFB590B2093"
+                            },
+                            "spec": {
+                              "editorMode": "builder",
+                              "expr": "probe_duration_seconds{job=\"http_endpoints\", instance=\"ui.rhem.rhem.apps.acp.summit2026.com\"}",
+                              "legendFormat": "RHEM UI",
+                              "range": true
+                            }
+                          },
+                          "refId": "C",
+                          "hidden": false
+                        }
+                      },
+                      {
+                        "kind": "PanelQuery",
+                        "spec": {
+                          "query": {
+                            "kind": "DataQuery",
+                            "group": "prometheus",
+                            "version": "v0",
+                            "datasource": {
+                              "name": "PBFA97CFB590B2093"
+                            },
+                            "spec": {
+                              "editorMode": "builder",
+                              "expr": "probe_duration_seconds{job=\"http_endpoints\", instance=\"console-openshift-console.apps.acp.summit2026.com\"}",
+                              "legendFormat": "ACP Console",
+                              "range": true
+                            }
+                          },
+                          "refId": "D",
+                          "hidden": false
+                        }
+                      },
+                      {
+                        "kind": "PanelQuery",
+                        "spec": {
+                          "query": {
+                            "kind": "DataQuery",
+                            "group": "prometheus",
+                            "version": "v0",
+                            "datasource": {
+                              "name": "PBFA97CFB590B2093"
+                            },
+                            "spec": {
+                              "editorMode": "builder",
+                              "expr": "probe_duration_seconds{job=\"http_endpoints\", instance=\"openshift-gitops-server-openshift-gitops.apps.acp.summit2026.com\"}",
+                              "legendFormat": "ArgoCD",
+                              "range": true
+                            }
+                          },
+                          "refId": "E",
+                          "hidden": false
+                        }
+                      },
+                      {
+                        "kind": "PanelQuery",
+                        "spec": {
+                          "query": {
+                            "kind": "DataQuery",
+                            "group": "prometheus",
+                            "version": "v0",
+                            "datasource": {
+                              "name": "PBFA97CFB590B2093"
+                            },
+                            "spec": {
+                              "editorMode": "builder",
+                              "expr": "probe_duration_seconds{job=\"tcp_ports\", instance=\"mqtt.summit2026.com:1883\"}",
+                              "instant": false,
+                              "legendFormat": "MQTT Broker",
+                              "range": true
+                            }
+                          },
+                          "refId": "F",
+                          "hidden": false
+                        }
+                      }
+                    ],
+                    "transformations": [],
+                    "queryOptions": {}
+                  }
+                },
+                "vizConfig": {
+                  "kind": "VizConfig",
+                  "group": "bargauge",
+                  "version": "13.0.1",
+                  "spec": {
+                    "options": {
+                      "displayMode": "lcd",
+                      "legend": {
+                        "calcs": [],
+                        "displayMode": "list",
+                        "placement": "bottom",
+                        "showLegend": false
+                      },
+                      "maxVizHeight": 300,
+                      "minVizHeight": 16,
+                      "minVizWidth": 8,
+                      "namePlacement": "auto",
+                      "orientation": "horizontal",
+                      "reduceOptions": {
+                        "calcs": [
+                          "lastNotNull"
+                        ],
+                        "fields": "",
+                        "values": false
+                      },
+                      "showUnfilled": true,
+                      "sizing": "auto",
+                      "valueMode": "color"
+                    },
+                    "fieldConfig": {
+                      "defaults": {
+                        "unit": "s",
+                        "thresholds": {
+                          "mode": "absolute",
+                          "steps": [
+                            {
+                              "value": 0,
+                              "color": "green"
+                            },
+                            {
+                              "value": 80,
+                              "color": "red"
+                            }
+                          ]
+                        },
+                        "color": {
+                          "mode": "palette-classic"
+                        }
+                      },
+                      "overrides": []
+                    }
+                  }
+                },
+                "transparent": true
+              }
+            },
+            "panel-2": {
+              "kind": "Panel",
+              "spec": {
+                "id": 2,
+                "title": "Bootstrap",
+                "description": "",
+                "links": [],
+                "data": {
+                  "kind": "QueryGroup",
+                  "spec": {
+                    "queries": [
+                      {
+                        "kind": "PanelQuery",
+                        "spec": {
+                          "query": {
+                            "kind": "DataQuery",
+                            "group": "prometheus",
+                            "version": "v0",
+                            "datasource": {
+                              "name": "PBFA97CFB590B2093"
+                            },
+                            "spec": {
+                              "editorMode": "builder",
+                              "expr": "probe_success{job=\"ping\", instance=\"bootstrap.summit2026.com\"}",
+                              "legendFormat": "__auto",
+                              "range": true
+                            }
+                          },
+                          "refId": "A",
+                          "hidden": false
+                        }
+                      }
+                    ],
+                    "transformations": [],
+                    "queryOptions": {}
+                  }
+                },
+                "vizConfig": {
+                  "kind": "VizConfig",
+                  "group": "stat",
+                  "version": "13.0.1",
+                  "spec": {
+                    "options": {
+                      "colorMode": "background",
+                      "graphMode": "none",
+                      "justifyMode": "auto",
+                      "orientation": "auto",
+                      "percentChangeColorMode": "standard",
+                      "reduceOptions": {
+                        "calcs": [
+                          "lastNotNull"
+                        ],
+                        "fields": "",
+                        "values": false
+                      },
+                      "showPercentChange": false,
+                      "textMode": "auto",
+                      "wideLayout": true
+                    },
+                    "fieldConfig": {
+                      "defaults": {
+                        "mappings": [
+                          {
+                            "type": "value",
+                            "options": {
+                              "0": {
+                                "text": "DOWN",
+                                "index": 0
+                              },
+                              "1": {
+                                "text": "UP",
+                                "index": 1
+                              }
+                            }
+                          }
+                        ],
+                        "thresholds": {
+                          "mode": "absolute",
+                          "steps": [
+                            {
+                              "value": 0,
+                              "color": "green"
+                            },
+                            {
+                              "value": 0,
+                              "color": "dark-red"
+                            },
+                            {
+                              "value": 1,
+                              "color": "green"
+                            }
+                          ]
+                        },
+                        "color": {
+                          "mode": "palette-classic"
+                        }
+                      },
+                      "overrides": []
+                    }
+                  }
+                }
+              }
+            },
+            "panel-3": {
+              "kind": "Panel",
+              "spec": {
+                "id": 3,
+                "title": "Node0",
+                "description": "",
+                "links": [],
+                "data": {
+                  "kind": "QueryGroup",
+                  "spec": {
+                    "queries": [
+                      {
+                        "kind": "PanelQuery",
+                        "spec": {
+                          "query": {
+                            "kind": "DataQuery",
+                            "group": "prometheus",
+                            "version": "v0",
+                            "datasource": {
+                              "name": "PBFA97CFB590B2093"
+                            },
+                            "spec": {
+                              "editorMode": "builder",
+                              "expr": "probe_success{job=\"ping\", instance=\"node0.summit2026.com\"}",
+                              "legendFormat": "__auto",
+                              "range": true
+                            }
+                          },
+                          "refId": "A",
+                          "hidden": false
+                        }
+                      }
+                    ],
+                    "transformations": [],
+                    "queryOptions": {}
+                  }
+                },
+                "vizConfig": {
+                  "kind": "VizConfig",
+                  "group": "stat",
+                  "version": "13.0.1",
+                  "spec": {
+                    "options": {
+                      "colorMode": "background",
+                      "graphMode": "none",
+                      "justifyMode": "auto",
+                      "orientation": "auto",
+                      "percentChangeColorMode": "standard",
+                      "reduceOptions": {
+                        "calcs": [
+                          "lastNotNull"
+                        ],
+                        "fields": "",
+                        "values": false
+                      },
+                      "showPercentChange": false,
+                      "textMode": "auto",
+                      "wideLayout": true
+                    },
+                    "fieldConfig": {
+                      "defaults": {
+                        "mappings": [
+                          {
+                            "type": "value",
+                            "options": {
+                              "0": {
+                                "text": "DOWN",
+                                "index": 0
+                              },
+                              "1": {
+                                "text": "UP",
+                                "index": 1
+                              }
+                            }
+                          }
+                        ],
+                        "thresholds": {
+                          "mode": "absolute",
+                          "steps": [
+                            {
+                              "value": 0,
+                              "color": "green"
+                            },
+                            {
+                              "value": 0,
+                              "color": "dark-red"
+                            },
+                            {
+                              "value": 1,
+                              "color": "green"
+                            }
+                          ]
+                        },
+                        "color": {
+                          "mode": "palette-classic"
+                        }
+                      },
+                      "overrides": []
+                    }
+                  }
+                }
+              }
+            },
+            "panel-4": {
+              "kind": "Panel",
+              "spec": {
+                "id": 4,
+                "title": "Node1",
+                "description": "",
+                "links": [],
+                "data": {
+                  "kind": "QueryGroup",
+                  "spec": {
+                    "queries": [
+                      {
+                        "kind": "PanelQuery",
+                        "spec": {
+                          "query": {
+                            "kind": "DataQuery",
+                            "group": "prometheus",
+                            "version": "v0",
+                            "datasource": {
+                              "name": "PBFA97CFB590B2093"
+                            },
+                            "spec": {
+                              "editorMode": "builder",
+                              "expr": "probe_success{job=\"ping\", instance=\"node1.summit2026.com\"}",
+                              "legendFormat": "__auto",
+                              "range": true
+                            }
+                          },
+                          "refId": "A",
+                          "hidden": false
+                        }
+                      }
+                    ],
+                    "transformations": [],
+                    "queryOptions": {}
+                  }
+                },
+                "vizConfig": {
+                  "kind": "VizConfig",
+                  "group": "stat",
+                  "version": "13.0.1",
+                  "spec": {
+                    "options": {
+                      "colorMode": "background",
+                      "graphMode": "none",
+                      "justifyMode": "auto",
+                      "orientation": "auto",
+                      "percentChangeColorMode": "standard",
+                      "reduceOptions": {
+                        "calcs": [
+                          "lastNotNull"
+                        ],
+                        "fields": "",
+                        "values": false
+                      },
+                      "showPercentChange": false,
+                      "textMode": "auto",
+                      "wideLayout": true
+                    },
+                    "fieldConfig": {
+                      "defaults": {
+                        "mappings": [
+                          {
+                            "type": "value",
+                            "options": {
+                              "0": {
+                                "text": "DOWN",
+                                "index": 0
+                              },
+                              "1": {
+                                "text": "UP",
+                                "index": 1
+                              }
+                            }
+                          }
+                        ],
+                        "thresholds": {
+                          "mode": "absolute",
+                          "steps": [
+                            {
+                              "value": 0,
+                              "color": "green"
+                            },
+                            {
+                              "value": 0,
+                              "color": "dark-red"
+                            },
+                            {
+                              "value": 1,
+                              "color": "green"
+                            }
+                          ]
+                        },
+                        "color": {
+                          "mode": "palette-classic"
+                        }
+                      },
+                      "overrides": []
+                    }
+                  }
+                }
+              }
+            },
+            "panel-5": {
+              "kind": "Panel",
+              "spec": {
+                "id": 5,
+                "title": "Arbiter",
+                "description": "",
+                "links": [],
+                "data": {
+                  "kind": "QueryGroup",
+                  "spec": {
+                    "queries": [
+                      {
+                        "kind": "PanelQuery",
+                        "spec": {
+                          "query": {
+                            "kind": "DataQuery",
+                            "group": "prometheus",
+                            "version": "v0",
+                            "datasource": {
+                              "name": "PBFA97CFB590B2093"
+                            },
+                            "spec": {
+                              "editorMode": "builder",
+                              "expr": "probe_success{job=\"ping\", instance=\"arbiter.summit2026.com\"}",
+                              "legendFormat": "__auto",
+                              "range": true
+                            }
+                          },
+                          "refId": "A",
+                          "hidden": false
+                        }
+                      }
+                    ],
+                    "transformations": [],
+                    "queryOptions": {}
+                  }
+                },
+                "vizConfig": {
+                  "kind": "VizConfig",
+                  "group": "stat",
+                  "version": "13.0.1",
+                  "spec": {
+                    "options": {
+                      "colorMode": "background",
+                      "graphMode": "none",
+                      "justifyMode": "auto",
+                      "orientation": "auto",
+                      "percentChangeColorMode": "standard",
+                      "reduceOptions": {
+                        "calcs": [
+                          "lastNotNull"
+                        ],
+                        "fields": "",
+                        "values": false
+                      },
+                      "showPercentChange": false,
+                      "textMode": "auto",
+                      "wideLayout": true
+                    },
+                    "fieldConfig": {
+                      "defaults": {
+                        "mappings": [
+                          {
+                            "type": "value",
+                            "options": {
+                              "0": {
+                                "text": "DOWN",
+                                "index": 0
+                              },
+                              "1": {
+                                "text": "UP",
+                                "index": 1
+                              }
+                            }
+                          }
+                        ],
+                        "thresholds": {
+                          "mode": "absolute",
+                          "steps": [
+                            {
+                              "value": 0,
+                              "color": "green"
+                            },
+                            {
+                              "value": 0,
+                              "color": "dark-red"
+                            },
+                            {
+                              "value": 1,
+                              "color": "green"
+                            }
+                          ]
+                        },
+                        "color": {
+                          "mode": "palette-classic"
+                        }
+                      },
+                      "overrides": []
+                    }
+                  }
+                }
+              }
+            },
+            "panel-6": {
+              "kind": "Panel",
+              "spec": {
+                "id": 6,
+                "title": "IONA",
+                "description": "",
+                "links": [],
+                "data": {
+                  "kind": "QueryGroup",
+                  "spec": {
+                    "queries": [
+                      {
+                        "kind": "PanelQuery",
+                        "spec": {
+                          "query": {
+                            "kind": "DataQuery",
+                            "group": "prometheus",
+                            "version": "v0",
+                            "datasource": {
+                              "name": "PBFA97CFB590B2093"
+                            },
+                            "spec": {
+                              "editorMode": "builder",
+                              "expr": "probe_success{job=\"ping\", instance=\"iona.summit2026.com\"}",
+                              "legendFormat": "__auto",
+                              "range": true
+                            }
+                          },
+                          "refId": "A",
+                          "hidden": false
+                        }
+                      }
+                    ],
+                    "transformations": [],
+                    "queryOptions": {}
+                  }
+                },
+                "vizConfig": {
+                  "kind": "VizConfig",
+                  "group": "stat",
+                  "version": "13.0.1",
+                  "spec": {
+                    "options": {
+                      "colorMode": "background",
+                      "graphMode": "none",
+                      "justifyMode": "auto",
+                      "orientation": "auto",
+                      "percentChangeColorMode": "standard",
+                      "reduceOptions": {
+                        "calcs": [
+                          "lastNotNull"
+                        ],
+                        "fields": "",
+                        "values": false
+                      },
+                      "showPercentChange": false,
+                      "textMode": "auto",
+                      "wideLayout": true
+                    },
+                    "fieldConfig": {
+                      "defaults": {
+                        "mappings": [
+                          {
+                            "type": "value",
+                            "options": {
+                              "0": {
+                                "text": "DOWN",
+                                "index": 0
+                              },
+                              "1": {
+                                "text": "UP",
+                                "index": 1
+                              }
+                            }
+                          }
+                        ],
+                        "thresholds": {
+                          "mode": "absolute",
+                          "steps": [
+                            {
+                              "value": 0,
+                              "color": "green"
+                            },
+                            {
+                              "value": 0,
+                              "color": "dark-red"
+                            },
+                            {
+                              "value": 1,
+                              "color": "green"
+                            }
+                          ]
+                        },
+                        "color": {
+                          "mode": "palette-classic"
+                        }
+                      },
+                      "overrides": []
+                    }
+                  }
+                }
+              }
+            },
+            "panel-7": {
+              "kind": "Panel",
+              "spec": {
+                "id": 7,
+                "title": "Edge Gateway",
+                "description": "",
+                "links": [],
+                "data": {
+                  "kind": "QueryGroup",
+                  "spec": {
+                    "queries": [
+                      {
+                        "kind": "PanelQuery",
+                        "spec": {
+                          "query": {
+                            "kind": "DataQuery",
+                            "group": "prometheus",
+                            "version": "v0",
+                            "datasource": {
+                              "name": "PBFA97CFB590B2093"
+                            },
+                            "spec": {
+                              "editorMode": "builder",
+                              "expr": "probe_success{job=\"ping\", instance=\"bootstrap.summit2026.com\"}",
+                              "legendFormat": "__auto",
+                              "range": true
+                            }
+                          },
+                          "refId": "A",
+                          "hidden": false
+                        }
+                      }
+                    ],
+                    "transformations": [],
+                    "queryOptions": {}
+                  }
+                },
+                "vizConfig": {
+                  "kind": "VizConfig",
+                  "group": "stat",
+                  "version": "13.0.1",
+                  "spec": {
+                    "options": {
+                      "colorMode": "background",
+                      "graphMode": "none",
+                      "justifyMode": "auto",
+                      "orientation": "auto",
+                      "percentChangeColorMode": "standard",
+                      "reduceOptions": {
+                        "calcs": [
+                          "lastNotNull"
+                        ],
+                        "fields": "",
+                        "values": false
+                      },
+                      "showPercentChange": false,
+                      "textMode": "auto",
+                      "wideLayout": true
+                    },
+                    "fieldConfig": {
+                      "defaults": {
+                        "mappings": [
+                          {
+                            "type": "value",
+                            "options": {
+                              "0": {
+                                "text": "DOWN",
+                                "index": 0
+                              },
+                              "1": {
+                                "text": "UP",
+                                "index": 1
+                              }
+                            }
+                          }
+                        ],
+                        "thresholds": {
+                          "mode": "absolute",
+                          "steps": [
+                            {
+                              "value": 0,
+                              "color": "green"
+                            },
+                            {
+                              "value": 0,
+                              "color": "dark-red"
+                            },
+                            {
+                              "value": 1,
+                              "color": "green"
+                            }
+                          ]
+                        },
+                        "color": {
+                          "mode": "palette-classic"
+                        }
+                      },
+                      "overrides": []
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "layout": {
+            "kind": "GridLayout",
+            "spec": {
+              "items": [
+                {
+                  "kind": "GridLayoutItem",
+                  "spec": {
+                    "x": 0,
+                    "y": 0,
+                    "width": 4,
+                    "height": 6,
+                    "element": {
+                      "kind": "ElementReference",
+                      "name": "panel-2"
+                    }
+                  }
+                },
+                {
+                  "kind": "GridLayoutItem",
+                  "spec": {
+                    "x": 4,
+                    "y": 0,
+                    "width": 4,
+                    "height": 6,
+                    "element": {
+                      "kind": "ElementReference",
+                      "name": "panel-3"
+                    }
+                  }
+                },
+                {
+                  "kind": "GridLayoutItem",
+                  "spec": {
+                    "x": 8,
+                    "y": 0,
+                    "width": 4,
+                    "height": 6,
+                    "element": {
+                      "kind": "ElementReference",
+                      "name": "panel-4"
+                    }
+                  }
+                },
+                {
+                  "kind": "GridLayoutItem",
+                  "spec": {
+                    "x": 12,
+                    "y": 0,
+                    "width": 4,
+                    "height": 6,
+                    "element": {
+                      "kind": "ElementReference",
+                      "name": "panel-5"
+                    }
+                  }
+                },
+                {
+                  "kind": "GridLayoutItem",
+                  "spec": {
+                    "x": 16,
+                    "y": 0,
+                    "width": 4,
+                    "height": 6,
+                    "element": {
+                      "kind": "ElementReference",
+                      "name": "panel-6"
+                    }
+                  }
+                },
+                {
+                  "kind": "GridLayoutItem",
+                  "spec": {
+                    "x": 20,
+                    "y": 0,
+                    "width": 4,
+                    "height": 6,
+                    "element": {
+                      "kind": "ElementReference",
+                      "name": "panel-7"
+                    }
+                  }
+                },
+                {
+                  "kind": "GridLayoutItem",
+                  "spec": {
+                    "x": 0,
+                    "y": 6,
+                    "width": 24,
+                    "height": 19,
+                    "element": {
+                      "kind": "ElementReference",
+                      "name": "panel-1"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "links": [],
+          "liveNow": false,
+          "preload": false,
+          "tags": [],
+          "timeSettings": {
+            "timezone": "browser",
+            "from": "now-5m",
+            "to": "now",
+            "autoRefresh": "10s",
+            "autoRefreshIntervals": [
+              "5s",
+              "10s",
+              "30s",
+              "1m",
+              "5m",
+              "15m",
+              "30m",
+              "1h",
+              "2h",
+              "1d"
+            ],
+            "hideTimepicker": false,
+            "fiscalYearStartMonth": 0
+          },
+          "title": "System Dashboard",
+          "variables": [],
+          "preferences": {
+            "layout": {
+              "kind": "GridLayout",
+              "spec": {
+                "items": []
+              }
+            }
+          }
+        }
+      }

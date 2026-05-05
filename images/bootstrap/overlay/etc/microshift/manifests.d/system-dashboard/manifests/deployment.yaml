@@ -19,16 +19,16 @@ spec:
         app.kubernetes.io/part-of: system-dashboard
     spec:
       containers:
-      - name: blackbox-exporter
-        image: prom/blackbox-exporter:latest
-        securityContext:
-          privileged: true
+        - name: blackbox-exporter
+          image: prom/blackbox-exporter:latest
+          securityContext:
+            privileged: true
         ports:
-        - containerPort: 9115
+          - containerPort: 9115
         volumeMounts:
-        - name: config-volume
-          mountPath: /etc/blackbox_exporter/config.yml
-          subPath: config.yml
+          - name: config-volume
+            mountPath: /etc/blackbox_exporter/config.yml
+            subPath: config.yml
       volumes:
       - name: config-volume
         configMap:
@@ -55,12 +55,12 @@ spec:
         app.kubernetes.io/part-of: system-dashboard
     spec:
       containers:
-      - name: prometheus
-        image: quay.io/prometheus/prometheus
-        resources:
-          limits:
-            memory: 512Mi
-            cpu: 1000m
+        - name: prometheus
+          image: quay.io/prometheus/prometheus
+          resources:
+            limits:
+              memory: 512Mi
+              cpu: 1000m
         ports:
           - containerPort: 9090
         volumeMounts:
@@ -71,12 +71,12 @@ spec:
           - name: prometheus-data
             mountPath: /prometheus
       volumes:
-      - name: prometheus-config
-        configMap:
-          name: prometheus-config
-      - name: prometheus-data
-        persistentVolumeClaim:
-          claimName: prometheus-data-pvc
+        - name: prometheus-config
+          configMap:
+            name: prometheus-config
+        - name: prometheus-data
+          persistentVolumeClaim:
+            claimName: prometheus-data-pvc
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -98,12 +98,12 @@ spec:
         app.kubernetes.io/part-of: system-dashboard
     spec:
       containers:
-      - name: grafana
-        image: grafana/grafana-enterprise:latest
-        resources:
-          limits:
-            memory: 256Mi
-            cpu: 500m
+        - name: grafana
+          image: grafana/grafana-enterprise:latest
+          resources:
+            limits:
+              memory: 1Gi
+              cpu: 500m
         ports:
           - containerPort: 3000
         envFrom:
@@ -113,18 +113,18 @@ spec:
           - name: datasource-config
             mountPath: /etc/grafana/provisioning/datasources
             readOnly: true
-          #- name: dashboards-config
-          #  mountPath: /etc/grafana/provisioning/dashboards
-          #  readOnly: true
-          #- name: dashboards
-          #  mountPath: /var/lib/grafana/dashboards
+          - name: dashboards-config
+            mountPath: /etc/grafana/provisioning/dashboards
+            readOnly: true
+          - name: dashboards
+            mountPath: /var/lib/grafana/dashboards
       volumes:
-      - name: datasource-config
-        configMap:
-          name: datasource-config
-      #- name: dashboards-config
-      #  configMap:
-      #    name: dashboards-config
-      #- name: dashboards
-      #  configMap:
-      #    name: dashboards
+        - name: datasource-config
+          configMap:
+            name: datasource-config
+        - name: dashboards-config
+          configMap:
+          name: dashboards-config
+        - name: dashboards
+          configMap:
+          name: dashboards
