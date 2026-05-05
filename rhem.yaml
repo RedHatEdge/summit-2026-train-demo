@@ -1,0 +1,56 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: rhem
+  namespace: openshift-gitops
+  labels:
+    application: rhem
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+    - post-delete-finalizer.argocd.argoproj.io
+    - post-delete-finalizer.argocd.argoproj.io/cleanup
+spec:
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true 
+    automated:
+      prune: true
+  destination:
+    namespace: rhem
+    server: 'https://kubernetes.default.svc'
+  ignoreDifferences:
+    - group: batch
+      jsonPointers:
+        - /spec
+        - /metadata/annotations
+        - /metadata/labels
+      kind: Job
+      name: flightctl-db-migration-1-dryrun
+  project: default
+  source:
+    chart: redhat-rhem
+    repoURL: quay.io/jswanson
+    targetRevision: 1.1.1
+    helm:
+      parameters:
+        - name: global.baseDomain
+          value: rhem.rhem.apps.acp.summit2026.com
+        - forceString: true
+          name: global.enableOpenShiftExtensions
+          value: 'true'
+        - forceString: true
+          name: global.enableMulticlusterExtensions
+          value: 'false'
+        - name: global.auth.openshift.authorizationUrl
+          value: 'https://oauth-openshift.apps.acp.summit2026.com/oauth/authorize'
+        - name: global.auth.openshift.tokenUrl
+          value: 'https://oauth-openshift.apps.acp.summit2026.com/oauth/token'
+        - name: global.auth.openshift.issuer
+          value: 'https://oauth-openshift.apps.acp.summit2026.com/oauth/authorize'
+        - name: global.auth.insecureSkipTlsVerify
+          value: true
+        - name: global.generateCertificates
+          value: builtin
+        - name: global.storageClassName
+          value: px-csi-replicated
